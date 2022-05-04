@@ -65,6 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private MainFrame() {
+        
     }
     
     public void clear(){
@@ -579,12 +580,7 @@ public class MainFrame extends javax.swing.JFrame {
             transactionValidation.isZero("amount");
             return;
         }
- 
-//        if (this.id > 0) {
-//            update();
-//        }else{
-//            create();
-//        }
+
         create();
 
         clear();

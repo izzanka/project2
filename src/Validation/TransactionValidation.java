@@ -23,8 +23,4 @@ public class TransactionValidation extends Validation{
     public void isString(String msg){
         JOptionPane.showMessageDialog(null, msg + " can only number!");
     }
-    
-    public void isError(String msg){
-        System.out.println(msg);
-    }
 }

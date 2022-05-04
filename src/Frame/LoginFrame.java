@@ -190,7 +190,7 @@ public class LoginFrame extends javax.swing.JFrame {
             }
 
         } catch (HeadlessException | SQLException e) {
-            System.out.println(e.getMessage());
+            loginValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

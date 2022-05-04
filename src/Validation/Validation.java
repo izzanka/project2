@@ -24,5 +24,8 @@ public class Validation {
     public void isFailed(String msg){
         JOptionPane.showMessageDialog(null, msg + " failed!");
     }
-   
+    
+    public void isError(String msg){
+        System.out.println(msg);
+    }
 }

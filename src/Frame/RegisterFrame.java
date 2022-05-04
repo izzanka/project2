@@ -175,7 +175,7 @@ public class RegisterFrame extends javax.swing.JFrame {
             }
             
         } catch (HeadlessException | SQLException e) {
-            System.out.println(e.getMessage());
+            registerValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
