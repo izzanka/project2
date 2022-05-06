@@ -8,13 +8,12 @@ package Frame;
 import Connection.DBConnection;
 import Model.UserModel;
 import Query.UserQuery;
-import Validation.RegisterValidation;
+import Validation.RegisterFrameValidation;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,7 +27,7 @@ public class RegisterFrame extends javax.swing.JFrame {
     
     UserModel userModel = new UserModel();
     UserQuery userQuery = new UserQuery();
-    RegisterValidation registerValidation = new RegisterValidation();
+    RegisterFrameValidation registerFrameValidation = new RegisterFrameValidation();
 
     public RegisterFrame() {
         initComponents();
@@ -147,8 +146,8 @@ public class RegisterFrame extends javax.swing.JFrame {
             String username = txtUsername.getText();
             String password = new String(txtPassword.getPassword());
             
-            if(username.equals("") || password.equals("")){
-                registerValidation.isNull("username and password");
+            if(username.isEmpty() || password.isEmpty()){
+                registerFrameValidation.isNull("username and password");
             }else{
                 
                 userModel.setUsername(username);
@@ -163,9 +162,9 @@ public class RegisterFrame extends javax.swing.JFrame {
                 String msg = "register";
                 
                 if(result == 1){
-                    registerValidation.isSuccess(msg);
+                    registerFrameValidation.isSuccess(msg);
                 }else{
-                    registerValidation.isFailed(msg);
+                    registerFrameValidation.isFailed(msg);
                 }
 
                 LoginFrame loginFrame = new LoginFrame();
@@ -175,7 +174,7 @@ public class RegisterFrame extends javax.swing.JFrame {
             }
             
         } catch (HeadlessException | SQLException e) {
-            registerValidation.isError(e.getMessage());
+            registerFrameValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 

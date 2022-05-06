@@ -12,7 +12,7 @@ import Model.UserModel;
 import Query.CategoryQuery;
 import Query.TransactionQuery;
 import Query.UserQuery;
-import Validation.TransactionValidation;
+import Validation.MainFrameValidation;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
     private int tempAmount = 0;
     
     Helper helper = new Helper();
-    TransactionValidation transactionValidation = new TransactionValidation();
+    MainFrameValidation mainFrameValidation = new MainFrameValidation();
      
     public MainFrame(UserModel userModel) {
         initComponents();
@@ -57,7 +57,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.conn = DBConnection.getConnection();
         this.saldo += userModel.getSaldo();
 
-        setCategory();
+        setCategoryName();
         setLabel();
         
         btnReset.setEnabled(false);
@@ -74,9 +74,11 @@ public class MainFrame extends javax.swing.JFrame {
         txtDesc.setText("");
         cbType.setSelectedIndex(0);
         cbCategory.setSelectedIndex(0);
+        cbFilter.setSelectedIndex(0);
         
         this.id = 0;
         this.tempAmount = 0;
+        cbType.setEnabled(true);
     }
     
     public void setLabel(){
@@ -91,11 +93,11 @@ public class MainFrame extends javax.swing.JFrame {
             pst.setInt(2, userModel.getId());
             pst.executeUpdate();
         } catch (SQLException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }
     
-    public void setCategory(){
+    public void setCategoryName(){
         try {
             String type = cbType.getSelectedItem().toString();
             pst = conn.prepareStatement(categoryQuery.getByType);
@@ -107,20 +109,21 @@ public class MainFrame extends javax.swing.JFrame {
             }
   
         } catch (SQLException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }
     
-    public void setCategoryId(String name){
+    public void setCategoryId(String name,String type){
         try {
             pst = conn.prepareStatement(categoryQuery.getByName);
             pst.setString(1, name);
+            pst.setString(2, type);
             rs = pst.executeQuery(); 
             if(rs.next()){
                transactionModel.setCategory_id(rs.getInt("id"));
             }            
         } catch (SQLException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }
     
@@ -135,7 +138,7 @@ public class MainFrame extends javax.swing.JFrame {
             rs = pst.executeQuery();
             setTable(rs);
         } catch (SQLException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }
     
@@ -152,7 +155,7 @@ public class MainFrame extends javax.swing.JFrame {
                 setTable(rs);
             }
         } catch (SQLException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }
     
@@ -167,12 +170,12 @@ public class MainFrame extends javax.swing.JFrame {
             
             if(!type.equals("income")){
                 if (amount > this.saldo) {
-                    transactionValidation.isMoreThanCurrentSaldo();
+                    mainFrameValidation.isMoreThanCurrentSaldo();
                     return;
                 }
             }
             
-            setCategoryId(category);
+            setCategoryId(category,type);
 
             transactionModel.setDate(date);
             transactionModel.setAmount(amount);
@@ -221,6 +224,7 @@ public class MainFrame extends javax.swing.JFrame {
             int result = pst.executeUpdate();
             
             String msg;
+            
             if(this.id > 0){
                 msg = "update data";
             }else{
@@ -228,78 +232,19 @@ public class MainFrame extends javax.swing.JFrame {
             }
           
             if(result == 1){
-                transactionValidation.isSuccess(msg);
+                mainFrameValidation.isSuccess(msg);
                 if (this.id > 0) {
                     btnDelete.setEnabled(false);
                 }
             }else{
-                transactionValidation.isFailed(msg);
+                mainFrameValidation.isFailed(msg);
             }      
             
         } catch (SQLException | ParseException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }
-    
-//    public void update(){
-//        try {
-//            Date date = txtDate.getDate();
-//            int amount = new Integer(txtAmount.getText());
-//            String desc = txtDesc.getText();
-//            String type = cbType.getSelectedItem().toString();
-//            String category = cbCategory.getSelectedItem().toString();
-//            
-//            if(!type.equals("income")){
-//                if (amount > this.saldo) {
-//                    transactionValidation.isMoreThanCurrentSaldo();
-//                    return;
-//                }
-//            }
-//         
-//            setCategoryId(category);
-//
-//            transactionModel.setDate(date);
-//            transactionModel.setAmount(amount);
-//            transactionModel.setDescription(desc);
-//            transactionModel.setUser_id(userModel.getId());
-//
-//            String stringDate = helper.dateToString(transactionModel.getDate());
-//
-//            if(type.equals("income")){
-//                this.saldo -= this.tempAmount;
-//                this.saldo += amount;
-//            }else{
-//                this.saldo += this.tempAmount;
-//                this.saldo -= amount;
-//            }
-//            
-//            setSaldo();
-//            setLabel();
-//
-//            pst = conn.prepareStatement(transactionQuery.update);
-//            pst.setInt(1, userModel.getId());
-//            pst.setInt(2, transactionModel.getCategory_id());
-//            pst.setInt(3, transactionModel.getAmount());
-//            pst.setString(4, transactionModel.getDescription());
-//            pst.setString(5, stringDate);
-//            pst.setInt(6, this.id);
-//
-//            int result = pst.executeUpdate();
-//
-//            String msg = "update data";
-//          
-//            if(result == 1){
-//                transactionValidation.isSuccess(msg);
-//                btnDelete.setEnabled(false);
-//            }else{
-//                transactionValidation.isFailed(msg);
-//            }      
-//             
-//        } catch (SQLException | ParseException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -375,6 +320,12 @@ public class MainFrame extends javax.swing.JFrame {
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtAmountKeyTyped(evt);
+            }
+        });
+
+        txtDesc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDescKeyReleased(evt);
             }
         });
 
@@ -556,11 +507,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         
         int option = JOptionPane.showConfirmDialog(null, "Are you sure?", 
-                     "Logout",
-        JOptionPane.YES_NO_OPTION);
+                     "Logout", JOptionPane.YES_NO_OPTION);
         
         if (option == JOptionPane.YES_OPTION) {
-            transactionValidation.isSuccess("logout");
+            mainFrameValidation.isSuccess("logout");
             LoginFrame loginFrame = new LoginFrame();
             loginFrame.setLocationRelativeTo(null);
             loginFrame.setVisible(true);
@@ -574,15 +524,15 @@ public class MainFrame extends javax.swing.JFrame {
         
         if( txtDate.getDate() == null || txtDesc.getText().isEmpty() || 
             amount.isEmpty()){
-            transactionValidation.isNull("date, amount and description");
+            mainFrameValidation.isNull("date, amount and description");
             return;
         }else if(Integer.valueOf(amount) == 0){
-            transactionValidation.isZero("amount");
+            mainFrameValidation.isZero("amount");
             return;
         }
 
         create();
-
+        
         clear();
         getAll();
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -597,7 +547,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void cbTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbTypeItemStateChanged
         cbCategory.removeAllItems();
-        setCategory();
+        setCategoryName();
     }//GEN-LAST:event_cbTypeItemStateChanged
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -619,6 +569,7 @@ public class MainFrame extends javax.swing.JFrame {
             
             btnDelete.setEnabled(true);
             btnReset.setEnabled(true);
+            cbType.setEnabled(false);
             
             Date date = new Date(helper.stringToDate(stringDate));
             
@@ -638,14 +589,14 @@ public class MainFrame extends javax.swing.JFrame {
             cbCategory.setSelectedItem(category_name);
             
         } catch (NumberFormatException | ParseException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_tblTrMouseClicked
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         try {
             int option = JOptionPane.showConfirmDialog(null, " Data id : " +
-            this.id + " will be deleted! Are you sure?", "Delete",
+            this.id + " will be deleted! Are you sure?", "Delete", 
             JOptionPane.YES_NO_OPTION);
             
             if(option == JOptionPane.YES_OPTION){
@@ -657,6 +608,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }else{
                     this.saldo += this.tempAmount;
                 } 
+                
                 setSaldo();
                 setLabel();
                 
@@ -667,17 +619,16 @@ public class MainFrame extends javax.swing.JFrame {
                 String msg = "delete data";
 
                 if(result == 1){
-                    transactionValidation.isSuccess(msg);
+                    mainFrameValidation.isSuccess(msg);
                     clear();
                     getAll();
                 }else{
-                    transactionValidation.isFailed(msg);
+                    mainFrameValidation.isFailed(msg);
                 }      
-            
             }
              
         } catch (HeadlessException | SQLException e) {
-            transactionValidation.isError(e.getMessage());
+            mainFrameValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -694,17 +645,25 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void txtAmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmountKeyReleased
-        String value = txtAmount.getText();
-        int l = value.length();
+        int x;
         
-        if (evt.getKeyChar() >= '0' && evt.getKeyChar() <= '9') {
-        }
-        else {
+        try {
+        x = Integer.parseInt(txtAmount.getText());
+        } catch (NumberFormatException nfe) {
             txtAmount.setText("");
-            transactionValidation.isString("amount");
-            return;
+            mainFrameValidation.isString("amount");
         }
+        
     }//GEN-LAST:event_txtAmountKeyReleased
+
+    private void txtDescKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescKeyReleased
+        String desc = txtDesc.getText();
+        
+        if(desc.length() > 20){
+            txtDesc.setText("");
+            mainFrameValidation.isTooLong("description");
+        }
+    }//GEN-LAST:event_txtDescKeyReleased
 
     /**
      * @param args the command line arguments

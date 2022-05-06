@@ -11,5 +11,5 @@ package Query;
  */
 public class CategoryQuery {
     public String getByType = "SELECT * FROM categories WHERE type = ?";
-    public String getByName = "SELECT id FROM categories WHERE name = ?";
+    public String getByName = "SELECT id FROM categories WHERE name = ? AND type = ?";
 }

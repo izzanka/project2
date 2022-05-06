@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  *
  * @author ASUS
  */
-public class LoginValidation extends Validation{
+public class LoginFrameValidation extends Validation{
     public void isInvalid(String msg){
         JOptionPane.showMessageDialog(null, msg + " invalid!");
     }

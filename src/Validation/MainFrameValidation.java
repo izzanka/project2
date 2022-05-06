@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  *
  * @author ASUS
  */
-public class TransactionValidation extends Validation{
+public class MainFrameValidation extends Validation{
     public void isMoreThanCurrentSaldo(){
         JOptionPane.showMessageDialog(null, "Amount cannot more than saldo!");
     }
@@ -21,6 +21,10 @@ public class TransactionValidation extends Validation{
     }
     
     public void isString(String msg){
-        JOptionPane.showMessageDialog(null, msg + " can only number!");
+        JOptionPane.showMessageDialog(null, msg + " can only number and cannot more than 9 (length)!");
+    }
+    
+    public void isTooLong(String msg){
+        JOptionPane.showMessageDialog(null, msg + " cannot more than 20 (length)!");
     }
 }

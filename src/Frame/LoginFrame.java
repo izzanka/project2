@@ -8,14 +8,12 @@ package Frame;
 import Connection.DBConnection;
 import Model.UserModel;
 import Query.UserQuery;
-import Validation.LoginValidation;
-
+import Validation.LoginFrameValidation;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 public class LoginFrame extends javax.swing.JFrame {
 
@@ -25,7 +23,7 @@ public class LoginFrame extends javax.swing.JFrame {
     
     UserQuery userQuery = new UserQuery();
     UserModel userModel = new UserModel();
-    LoginValidation loginValidation = new LoginValidation();
+    LoginFrameValidation loginFrameValidation = new LoginFrameValidation();
     
     public LoginFrame() {
         initComponents();
@@ -160,8 +158,8 @@ public class LoginFrame extends javax.swing.JFrame {
             String username = txtUsername.getText();
             String password = new String(txtPassword.getPassword());
 
-            if(username.equals("") || password.equals("")){
-                loginValidation.isNull("username and password");
+            if(username.isEmpty() || password.isEmpty()){
+                loginFrameValidation.isNull("username and password");
             }else{
                 userModel.setUsername(username);
                 userModel.setPassword(password);
@@ -173,12 +171,12 @@ public class LoginFrame extends javax.swing.JFrame {
                 rs = pst.executeQuery();
                 
                 if(!rs.next()){
-                    loginValidation.isInvalid("username and password");
+                    loginFrameValidation.isInvalid("username and password");
                     clear();
                     return;
                 }
                 
-                loginValidation.isSuccess("login");
+                loginFrameValidation.isSuccess("login");
 
                 userModel.setId(rs.getInt("id"));
                 userModel.setSaldo(rs.getInt("saldo"));
@@ -190,7 +188,7 @@ public class LoginFrame extends javax.swing.JFrame {
             }
 
         } catch (HeadlessException | SQLException e) {
-            loginValidation.isError(e.getMessage());
+            loginFrameValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

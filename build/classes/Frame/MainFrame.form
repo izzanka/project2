@@ -212,6 +212,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtDesc">
+      <Events>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDescKeyReleased"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>

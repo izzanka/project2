@@ -9,6 +9,6 @@ package Validation;
  *
  * @author ASUS
  */
-public class RegisterValidation extends Validation{
+public class RegisterFrameValidation extends Validation{
     
 }
