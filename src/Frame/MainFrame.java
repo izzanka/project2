@@ -527,6 +527,7 @@ public class MainFrame extends javax.swing.JFrame {
             mainFrameValidation.isNull("date, amount and description");
             return;
         }else if(Integer.valueOf(amount) == 0){
+            txtAmount.setText("");
             mainFrameValidation.isZero("amount");
             return;
         }
@@ -659,7 +660,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void txtDescKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescKeyReleased
         String desc = txtDesc.getText();
         
-        if(desc.length() > 20){
+        if(desc.length() > 15){
             txtDesc.setText("");
             mainFrameValidation.isTooLong("description");
         }

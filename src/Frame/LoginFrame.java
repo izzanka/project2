@@ -59,7 +59,19 @@ public class LoginFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Username");
 
+        txtUsername.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUsernameKeyReleased(evt);
+            }
+        });
+
         jLabel2.setText("Password");
+
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyReleased(evt);
+            }
+        });
 
         btnLogin.setText("LOGIN");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -191,6 +203,24 @@ public class LoginFrame extends javax.swing.JFrame {
             loginFrameValidation.isError(e.getMessage());
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsernameKeyReleased
+        String username = txtUsername.getText();
+        
+        if(username.length() > 15){
+            txtUsername.setText("");
+            loginFrameValidation.isTooLong("username");
+        }
+    }//GEN-LAST:event_txtUsernameKeyReleased
+
+    private void txtPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyReleased
+        String password = new String(txtPassword.getPassword());
+        
+        if(password.length() > 15){
+            txtPassword.setText("");
+            loginFrameValidation.isTooLong("password");
+        }
+    }//GEN-LAST:event_txtPasswordKeyReleased
 
     /**
      * @param args the command line arguments

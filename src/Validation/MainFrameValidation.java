@@ -23,8 +23,4 @@ public class MainFrameValidation extends Validation{
     public void isString(String msg){
         JOptionPane.showMessageDialog(null, msg + " can only number and cannot more than 9 (length)!");
     }
-    
-    public void isTooLong(String msg){
-        JOptionPane.showMessageDialog(null, msg + " cannot more than 20 (length)!");
-    }
 }

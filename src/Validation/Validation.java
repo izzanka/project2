@@ -25,6 +25,10 @@ public class Validation {
         JOptionPane.showMessageDialog(null, msg + " failed!");
     }
     
+    public void isTooLong(String msg){
+        JOptionPane.showMessageDialog(null, msg + " cannot more than 15 (length)!");
+    }
+    
     public void isError(String msg){
         System.out.println(msg);
     }
